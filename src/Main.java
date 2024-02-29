@@ -5,10 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -38,6 +35,8 @@ public class Main {
         List<Event> events= readEventsData();
         List<Region> regions= readRegionsData();
 
+        findGoldMedalsWonPerEveryOlympicYearOfEachPlayer(events);
+
 
     }
     public static List<Event> readEventsData(){
@@ -50,6 +49,12 @@ public class Main {
                     continue;
                 }
                 String [] eachEvent= l.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                for (int i = 0; i < eachEvent.length; i++) {
+
+                    if (eachEvent[i].startsWith("\"") && eachEvent[i].endsWith("\"")) {
+                        eachEvent[i] = eachEvent[i].substring(1,eachEvent[i].length() - 1);
+                    }
+                }
                 Event event= new Event();
 
                 event.setId(eachEvent[ID]);
@@ -105,6 +110,33 @@ public class Main {
         return allRegionsData;
     }
 
+    public static void findGoldMedalsWonPerEveryOlympicYearOfEachPlayer(List<Event> events){
 
+        Map<Map<String , String >, Integer> goldMedalsOfEachPlayer = new HashMap<>();
+        for( Event event: events){
+            Map<String, String> playerYear = new HashMap<>();
+            if(event.getMedal().equals("Gold")){
+                playerYear.put(event.getYear() , event.getName());
+
+                goldMedalsOfEachPlayer.put(playerYear, goldMedalsOfEachPlayer.getOrDefault(playerYear, 0)+1);
+            }
+        }
+        for ( Map.Entry<Map<String, String>, Integer> entry: goldMedalsOfEachPlayer.entrySet()){
+            Map<String, String> yearPlayed = entry.getKey();
+            int goldMedals = entry.getValue();
+            for (Map.Entry<String, String> yearAndPlayer : yearPlayed.entrySet()) {
+                String key = yearAndPlayer.getKey();
+                String value = yearAndPlayer.getValue();
+                System.out.print("In year " + key + " "+ value);
+            }
+            System.out.println(" won " + goldMedals+ " gold medal");
+
+        }
+    }
+
+    public static void findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(){
+
+
+    }
 
 }
