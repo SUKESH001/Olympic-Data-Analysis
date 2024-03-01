@@ -38,7 +38,8 @@ public class Main {
 //        findGoldMedalsWonPerEveryOlympicYearOfEachPlayer(events);
 //        findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(events);
 //        findEventWiseNumberOfMedalsIn1980(events);
-        findGoldWinnerOfFootballOfEveryOlympic(events);
+//        findGoldWinnerOfFootballOfEveryOlympic(events);
+        findFemaleAthleteWhoWonMaximumNumberOfGoldAllOlympics(events);
 
 
     }
@@ -53,14 +54,14 @@ public class Main {
                 }
                 String [] eachEvent= l.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)",-1);
                 for (int i = 0; i < eachEvent.length; i++) {
-
                     if (eachEvent[i].startsWith("\"") && eachEvent[i].endsWith("\"")) {
-
                         eachEvent[i] = eachEvent[i].substring(1,eachEvent[i].length() - 1);
                         if(eachEvent[i].equals("NA")){
                             eachEvent[i]="0";
                         }
-
+                    }
+                    if(eachEvent[i].equals("NA")){
+                        eachEvent[i]="0";
                     }
                 }
                 Event event= new Event();
@@ -147,7 +148,8 @@ public class Main {
         Set<String> athletesWhoWonGoldMedals= new HashSet<>();
         int count=0;
         for(Event event :events){
-            if(event.getYear().equals("1980")&& event.getMedal().equals("Gold")){
+            int age = Integer.parseInt(event.getAge());
+            if(event.getYear().equals("1980")&& event.getMedal().equals("Gold")&& age < 30){
                 athletesWhoWonGoldMedals.add(event.getName());
             }
         }
@@ -200,7 +202,25 @@ public class Main {
         }
     }
 
+    public static void findFemaleAthleteWhoWonMaximumNumberOfGoldAllOlympics(List<Event> events){
 
+        Map<String , Integer> femaleAtheleteGoldMedals= new HashMap<>();
+
+        for ( Event event : events){
+            if(event.getSex().equals("F") && event.getMedal().equals("Gold")){
+                femaleAtheleteGoldMedals.put(event.getName(),
+                        femaleAtheleteGoldMedals.getOrDefault(event.getName() , 0)+1);
+            }
+        }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(femaleAtheleteGoldMedals.entrySet());
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        for(Map.Entry<String , Integer> entry: entryList){
+            System.out.println(entry.getKey() + " has won " + entry.getValue());
+            break;
+        }
+
+    }
 
 
 }
