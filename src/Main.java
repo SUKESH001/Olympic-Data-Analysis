@@ -39,7 +39,8 @@ public class Main {
 //        findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(events);
 //        findEventWiseNumberOfMedalsIn1980(events);
 //        findGoldWinnerOfFootballOfEveryOlympic(events);
-        findFemaleAthleteWhoWonMaximumNumberOfGoldAllOlympics(events);
+//        findFemaleAthleteWhoWonMaximumNumberOfGoldAllOlympics(events);
+        findNameOfAthleteParticipatedInMoreThanThreeOlympics(events);
 
 
     }
@@ -130,6 +131,7 @@ public class Main {
                 goldMedalsOfEachPlayer.put(playerYear, goldMedalsOfEachPlayer.getOrDefault(playerYear, 0)+1);
             }
         }
+        System.out.println("QUESTION 1");
         for ( Map.Entry<Map<String, String>, Integer> entry: goldMedalsOfEachPlayer.entrySet()){
             Map<String, String> yearPlayed = entry.getKey();
             int goldMedals = entry.getValue();
@@ -153,6 +155,7 @@ public class Main {
                 athletesWhoWonGoldMedals.add(event.getName());
             }
         }
+        System.out.println("QUESTION 2");
         for(String name : athletesWhoWonGoldMedals){
             System.out.println(name);
         }
@@ -175,7 +178,7 @@ public class Main {
             }
 
         }
-        System.out.println(count);
+        System.out.println("QUESTION 3");
         for ( Map.Entry<Map<String, String>, Integer> entry: medalsOfEachEvent.entrySet()){
             Map<String, String> medalEvent = entry.getKey();
             int medals = entry.getValue();
@@ -196,6 +199,7 @@ public class Main {
                 goldWinnersOfFootball.put(event.getYear(), event.getTeam());
             }
         }
+        System.out.println("QUESTION 4");
 
         for( Map.Entry<String , String> entryList : goldWinnersOfFootball.entrySet() ){
             System.out.println("In year " + entryList.getKey()+" "+ entryList.getValue() + " won FootBall Olympic gold medal" );
@@ -212,6 +216,7 @@ public class Main {
                         femaleAtheleteGoldMedals.getOrDefault(event.getName() , 0)+1);
             }
         }
+        System.out.println("QUESTION 5");
         List<Map.Entry<String, Integer>> entryList = new ArrayList<>(femaleAtheleteGoldMedals.entrySet());
         entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
@@ -219,8 +224,27 @@ public class Main {
             System.out.println(entry.getKey() + " has won " + entry.getValue());
             break;
         }
-
     }
+    public static void findNameOfAthleteParticipatedInMoreThanThreeOlympics(List<Event> events){
+        Map<Map<String, String> , Integer> athletsOlympicsCount = new HashMap<>();
+        for ( Event event : events){
+            Map<String , String> athleteSeason= new HashMap<>();
+            athleteSeason.put(event.getName(), event.getSeason());
+            athletsOlympicsCount.put(athleteSeason, athletsOlympicsCount.getOrDefault(athleteSeason, 0)+1);
 
-
+        }
+        System.out.println("QUESTION 6");
+        for ( Map.Entry<Map<String, String>, Integer> entry: athletsOlympicsCount.entrySet()){
+            Map<String, String> athleteSeason = entry.getKey();
+            int count = entry.getValue();
+            if(count >=3){
+                for (Map.Entry<String, String> athleteSeasonVal : athleteSeason.entrySet()) {
+                    String key = athleteSeasonVal.getKey();
+                    String value = athleteSeasonVal.getValue();
+                    System.out.print( key );
+                }
+                System.out.println(" Appeared in " + count + " Olympics.");
+            }
+        }
+    }
 }
