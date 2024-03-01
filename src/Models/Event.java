@@ -5,7 +5,7 @@ public class Event {
     private String id ;
     private String name;
     private String sex;
-    private String age;
+    private  String age;
     private String height;
     private String weight;
     private String team;
@@ -42,7 +42,7 @@ public class Event {
         this.sex = sex;
     }
 
-    public String getAge() {
+    public  String getAge() {
         return age;
     }
 

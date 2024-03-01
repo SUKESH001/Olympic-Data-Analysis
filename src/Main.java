@@ -35,7 +35,10 @@ public class Main {
         List<Event> events= readEventsData();
         List<Region> regions= readRegionsData();
 
-        findGoldMedalsWonPerEveryOlympicYearOfEachPlayer(events);
+//        findGoldMedalsWonPerEveryOlympicYearOfEachPlayer(events);
+//        findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(events);
+//        findEventWiseNumberOfMedalsIn1980(events);
+        findGoldWinnerOfFootballOfEveryOlympic(events);
 
 
     }
@@ -43,16 +46,21 @@ public class Main {
         List<Event> allEvents= new ArrayList<>();
         try{
             BufferedReader bufferedReader = new BufferedReader(new FileReader("athlete_events.csv"));
-            String l;
-            while ((l = bufferedReader.readLine()) != null){
+            String l=bufferedReader.readLine();
+            while ((l= bufferedReader.readLine()) != null){
                 if(l.startsWith("ID")){
                     continue;
                 }
-                String [] eachEvent= l.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                String [] eachEvent= l.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)",-1);
                 for (int i = 0; i < eachEvent.length; i++) {
 
                     if (eachEvent[i].startsWith("\"") && eachEvent[i].endsWith("\"")) {
+
                         eachEvent[i] = eachEvent[i].substring(1,eachEvent[i].length() - 1);
+                        if(eachEvent[i].equals("NA")){
+                            eachEvent[i]="0";
+                        }
+
                     }
                 }
                 Event event= new Event();
@@ -60,7 +68,7 @@ public class Main {
                 event.setId(eachEvent[ID]);
                 event.setName(eachEvent[NAME]);
                 event.setSex(eachEvent[SEX]);
-                event.setAge(eachEvent[AGE]);
+                event.setAge((eachEvent[AGE]));
                 event.setHeight(eachEvent[HEIGHT]);
                 event.setWeight(eachEvent[WEIGHT]);
                 event.setTeam(eachEvent[TEAM]);
@@ -134,9 +142,65 @@ public class Main {
         }
     }
 
-    public static void findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(){
+    public static void findAthletesWhoWonGoldMedalIn1980AndAgeIsLessThan30Years(List<Event> events){
 
+        Set<String> athletesWhoWonGoldMedals= new HashSet<>();
+        int count=0;
+        for(Event event :events){
+            if(event.getYear().equals("1980")&& event.getMedal().equals("Gold")){
+                athletesWhoWonGoldMedals.add(event.getName());
+            }
+        }
+        for(String name : athletesWhoWonGoldMedals){
+            System.out.println(name);
+        }
 
     }
+    public static void findEventWiseNumberOfMedalsIn1980(List<Event>events){
+        int count=0;
+
+        Map<Map<String , String >, Integer> medalsOfEachEvent = new HashMap<>();
+        for( Event event: events){
+            if(event.getYear().equals("1980")){
+                count++;
+                Map<String, String> eventMedals= new HashMap<>();
+                if(event.getMedal().equals("NA")) {
+                    continue;
+                }
+                eventMedals.put(event.getEvent() , event.getMedal());
+                medalsOfEachEvent.put(eventMedals, medalsOfEachEvent.getOrDefault(eventMedals, 0)+1);
+
+            }
+
+        }
+        System.out.println(count);
+        for ( Map.Entry<Map<String, String>, Integer> entry: medalsOfEachEvent.entrySet()){
+            Map<String, String> medalEvent = entry.getKey();
+            int medals = entry.getValue();
+            for (Map.Entry<String, String> medalEventval : medalEvent.entrySet()) {
+                String key = medalEventval.getKey();
+                String value = medalEventval.getValue();
+                System.out.print("Event: " + key + " medal: " + value);
+            }
+            System.out.println(" count: " + medals);
+        }
+
+    }
+    public static void findGoldWinnerOfFootballOfEveryOlympic(List<Event> events){
+        HashMap<String , String> goldWinnersOfFootball= new HashMap<>();
+
+        for(Event event : events){
+            if(event.getSport().equals("Football") && event.getMedal().equals("Gold")){
+                goldWinnersOfFootball.put(event.getYear(), event.getTeam());
+            }
+        }
+
+        for( Map.Entry<String , String> entryList : goldWinnersOfFootball.entrySet() ){
+            System.out.println("In year " + entryList.getKey()+" "+ entryList.getValue() + " won FootBall Olympic gold medal" );
+        }
+    }
+
+
+
 
 }
